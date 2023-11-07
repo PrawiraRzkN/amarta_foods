@@ -50,12 +50,12 @@ Dalam ringkasan, perbedaan utama adalah bahwa stateless widget adalah statis dan
 ### Langkah 1: Membuat Proyek Flutter
 Buka _command prompt_ dan navigasikan ke direktori tempat Anda ingin membuat proyek Flutter. Lalu, jalankan perintah berikut untuk membuat proyek Flutter dengan nama "inventoreal_mobile" dan pindah ke direktori proyek tersebut:
 ```bash
-flutter create inventoreal_mobile
-cd inventoreal_mobile
+flutter create amarta_foods
+cd amarta_foods
 ```
 
 ### Langkah 2: Menambahkan File `menu.dart`
-Buka folder `lib` dalam proyek `inventoreal_mobile` dan tambahkan file baru bernama `menu.dart`.
+Buka folder `lib` dalam proyek `amarta_foods` dan tambahkan file baru bernama `menu.dart`.
 
 ### Langkah 3: Menyusun Kode
 Pertama-tama, impor paket `flutter/material.dart` di bagian awal file `menu.dart`. Kemudian, pindahkan kelas `MyHomePage` dan `_MyHomePageState` yang ada dalam file `main.dart` ke dalam file `menu.dart`.
@@ -63,7 +63,7 @@ Pertama-tama, impor paket `flutter/material.dart` di bagian awal file `menu.dart
 ### Langkah 4: Mengimpor Fungsi dari `menu.dart`
 Di dalam file `main.dart`, tambahkan baris kode berikut untuk mengimpor fungsi yang diperlukan dari file `menu.dart`. Ini akan memastikan bahwa tidak ada kesalahan saat mengakses kelas dan fungsi yang didefinisikan di `menu.dart`.
 ```dart
-import 'package:inventoreal_mobile/menu.dart';
+import 'package:amarta_foods/menu.dart';
 ```
 
 ### Langkah 5: Membuat Tombol-Tombol Sederhana
@@ -88,10 +88,10 @@ Jangan lupa untuk menghapus fungsi State yang ada di bawah widget stateless ini.
 ### Langkah 7: Mendefinisikan Atribut Tombol
 Tambahkan definisi atribut tombol (InventoryItem) di dalam `class MyHomePage`:
 ```dart
-final List<InventoryItem> items = [
-  InventoryItem("Lihat Item", Icons.checklist, Colors.green),
-  InventoryItem("Tambah Item", Icons.add_shopping_cart, Colors.blue),
-  InventoryItem("Logout", Icons.logout, Colors.purple),
+final List<ShopItem> items = [
+   ShopItem("Lihat Item", Icons.checklist, Colors.yellow),
+   ShopItem("Tambah Item", Icons.add_shopping_cart, Colors.brown),
+   ShopItem("Logout", Icons.logout, Colors.red),
 ];
 ```
 
@@ -100,92 +100,99 @@ Di dalam `class MyHomePage`, ubah fungsi `Widget build` menjadi sebagai berikut:
 ```dart
 @override
 Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.black,
-      title: const Text(
-        'InventoReal',
-        style: TextStyle(color: Color.fromARGB(255, 95, 196, 95)),
+   return Scaffold(
+      appBar: AppBar(
+         title: const Text(
+            'Amarta Foods',
+         ),
       ),
-    ),
-    body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: Text(
-                'Main Menu',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+      body: SingleChildScrollView(
+         // Widget wrapper yang dapat discroll
+         child: Padding(
+            padding: const EdgeInsets.all(10.0), // Set padding dari halaman
+            child: Column(
+               // Widget untuk menampilkan children secara vertikal
+               children: <Widget>[
+                  const Padding(
+                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                     // Widget Text untuk menampilkan tulisan dengan alignment center dan style yang sesuai
+                     child: Text(
+                        'Amarta Foods', // Text yang menandakan toko
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                           fontSize: 30,
+                           fontWeight: FontWeight.bold,
+                        ),
+                     ),
+                  ),
+                  // Grid layout
+                  GridView.count(
+                     // Container pada card kita.
+                     primary: true,
+                     padding: const EdgeInsets.all(20),
+                     crossAxisSpacing: 10,
+                     mainAxisSpacing: 10,
+                     crossAxisCount: 3,
+                     shrinkWrap: true,
+                     children: items.map((ShopItem item) {
+                        // Iterasi untuk setiap item
+                        return ShopCard(item);
+                     }).toList(),
+                  ),
+               ],
             ),
-            GridView.count(
-              primary: true,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3,
-              shrinkWrap: true,
-              children: items.map((InventoryItem item) {
-                return InventoryCard(item);
-              }).toList(),
-            ),
-          ],
-        ),
+         ),
       ),
-    ),
-  );
+   );
 }
 ```
 
-### Langkah 9: Menambahkan Fungsi `InventoryCard`
+### Langkah 9: Menambahkan Fungsi `ShopCard`
 Tambahkan fungsi berikut untuk mendefinisikan tampilan tombol/card yang Anda tambahkan:
 ```dart
-class InventoryCard extends StatelessWidget {
-  final InventoryItem item;
+class ShopCard extends StatelessWidget {
+   final ShopItem item;
 
-  const InventoryCard(this.item, {super.key});
+   const ShopCard(this.item, {super.key}); // Constructor
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color,
-      child: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
+   @override
+   Widget build(BuildContext context) {
+      return Material(
+         color: item.color,
+         child: InkWell(
+            // Area responsive terhadap sentuhan
+            onTap: () {
+               // Memunculkan SnackBar ketika diklik
+               ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                          content: Text("Kamu telah menekan tombol ${item.name}!")));
+            },
+            child: Container(
+               // Container untuk menyimpan Icon dan Text
+               padding: const EdgeInsets.all(8),
+               child: Center(
+                  child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                        Icon(
+                           item.icon,
+                           color: Colors.white,
+                           size: 30.0,
+                        ),
+                        const Padding(padding: EdgeInsets.all(3)),
+                        Text(
+                           item.name,
+                           textAlign: TextAlign.center,
+                           style: const TextStyle(color: Colors.white),
+                        ),
+                     ],
+                  ),
+               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
+         ),
+      );
+   }
 }
 ```
 
