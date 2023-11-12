@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:amarta_foods/menu.dart';
+import 'package:amarta_foods/screens/menu.dart';
 
 void main() {
   runApp(const MyApp());
