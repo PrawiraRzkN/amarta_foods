@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amarta_foods/widgets/left_drawer.dart';
+import 'package:amarta_foods/widgets/shop_card.dart';
 
 class FoodFormPage extends StatefulWidget {
   const FoodFormPage({super.key});
@@ -7,6 +8,8 @@ class FoodFormPage extends StatefulWidget {
   @override
   State<FoodFormPage> createState() => _FoodFormPageState();
 }
+
+List<Food> foods = [];
 
 class _FoodFormPageState extends State<FoodFormPage> {
   final _formKey = GlobalKey<FormState>();
@@ -197,11 +200,20 @@ class _FoodFormPageState extends State<FoodFormPage> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          foods.add(Food(
+                            name: _name,
+                            category:  _category,
+                            origin: _origin,
+                            price: _price,
+                            description: _description,
+                            amount: _amount,
+                            dateAdded: _dateAdded,
+                          ));
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: const Text('Produk berhasil tersimpan'),
+                                title: const Text('Menu berhasil tersimpan'),
                                 content: SingleChildScrollView(
                                   child: Column(
                                     crossAxisAlignment:
@@ -210,10 +222,10 @@ class _FoodFormPageState extends State<FoodFormPage> {
                                       Text('Nama: $_name'),
                                       Text('Kategori: $_category'),
                                       Text('Daerah Asal: $_origin'),
-                                      Text('Harga: $_price'),
+                                      Text('Harga: Rp$_price,00'),
                                       Text('Deskripsi: $_description'),
                                       Text('Jumlah: $_amount'),
-                                      Text('Tanggal Ditambahkan: $_dateAdded')
+                                      Text('Ditambahkan pada tanggal ${_dateAdded.day}/${_dateAdded.month}/${_dateAdded.year} pukul ${_dateAdded.hour}.${_dateAdded.minute}')
                                     ],
                                   ),
                                 ),

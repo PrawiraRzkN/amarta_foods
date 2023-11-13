@@ -1,6 +1,35 @@
+import 'package:amarta_foods/screens/food_list.dart';
 import 'package:flutter/material.dart';
 import 'package:amarta_foods/screens/menu.dart';
 import 'package:amarta_foods/screens/foodlist_form.dart';
+
+class FoodItem {
+  final String name;
+  final IconData icon;
+  final Color color;
+
+  FoodItem(this.name, this.icon, this.color);
+}
+
+class Food {
+  final String name;
+  final String category;
+  final String origin;
+  final int amount;
+  final int price;
+  final String description;
+  final DateTime dateAdded;
+
+  Food({
+    required this.name,
+    required this.category,
+    required this.origin,
+    required this.amount,
+    required this.price,
+    required this.description,
+    required this.dateAdded,
+  });
+}
 
 class ShopCard extends StatelessWidget {
   final ShopItem item;
@@ -25,6 +54,11 @@ class ShopCard extends StatelessWidget {
           if (item.name == "Tambah Menu") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const FoodFormPage()));
+          }
+
+          if (item.name == "Lihat Menu") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const FoodsPage()));
           }
 
         },

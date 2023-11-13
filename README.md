@@ -197,3 +197,10 @@ class ShopCard extends StatelessWidget {
 ```
 
 Dengan langkah-langkah ini, saya telah membuat aplikasi Flutter yang menampilkan tiga tombol dengan ikon dan teks, dan akan menampilkan Snackbar ketika tombol tersebut ditekan.
+
+# Tugas 8: Flutter Navigation, Layouts, Forms, and Input Elements
+## Perbedaan antara `Navigator.push()` dan `Navigator.pushReplacement()`
+## Layout widget pada Flutter
+## Elemen Input pada Form yang Digunakan dan Alasannya
+## Penerapan _Clean Architecture_ pada aplikasi Flutter
+## Langkah-langkah menyelsaikan checklist

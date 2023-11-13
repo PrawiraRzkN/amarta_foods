@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amarta_foods/screens/menu.dart';
 import 'package:amarta_foods/screens/foodlist_form.dart';
+import 'package:amarta_foods/screens/food_list.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -46,6 +47,18 @@ class LeftDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => MyHomePage(),
+                  ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.checklist),
+            title: const Text('Lihat Menu'),
+            // Bagian redirection ke FoodsPage
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FoodsPage(),
                   ));
             },
           ),
