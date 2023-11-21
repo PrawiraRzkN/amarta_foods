@@ -1,88 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:amarta_foods/models/item.dart';
 import 'package:amarta_foods/widgets/left_drawer.dart';
-import 'package:amarta_foods/screens/foodlist_form.dart';
 
-class FoodsPage extends StatefulWidget {
-  const FoodsPage({super.key});
+class MenuPage extends StatefulWidget {
+  const MenuPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ItemsPageState();
+  _MenuPageState createState() => _MenuPageState();
 }
 
-class _ItemsPageState extends State<FoodsPage> {
+class _MenuPageState extends State<MenuPage> {
+  Future<List<Item>> fetchProduct() async {
+    var url = Uri.parse(
+        'https://rizky-prawira-tugas.pbp.cs.ui.ac.id/json/');
+    var response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object Product
+    List<Item> list_food = [];
+    for (var d in data) {
+      if (d != null) {
+        list_food.add(Item.fromJson(d));
+      }
+    }
+    return list_food;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Foods'),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-      ),
-      drawer: const LeftDrawer(),
-      body: ListView.builder(
-        itemCount: foods.length,
-        itemBuilder: (context, index) {
-          final food = foods[index];
-          return Card(
-            margin: const EdgeInsets.all(10),
-            elevation: 5,
-            child: ListTile(
-              title: Text(
-                food.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Daerah Asal: ${food.origin}"),
-                  Text("Kategori: ${food.category}"),
-                  Text("Harga: Rp${food.price},00"),
-                  Text("Jumlah: ${food.amount}"),
-                ],
-              ),
-              isThreeLine: true,
-              trailing: IconButton(
-                icon: const Icon(Icons.info_outline, color: Colors.black),
-                onPressed: () {
-                  // Ketika click icon detail, akan memunculkan data lengkap food
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(food.name),
-                        content: SingleChildScrollView(
-                          child: ListBody(
-                            children: <Widget>[
-                              Text("Daerah Asal: ${food.origin}"),
-                              Text("Kategori: ${food.category}"),
-                              Text("Jumlah: ${food.amount}"),
-
-                              Text("Harga: Rp${food.price},00"),
-                              Text("Deskripsi: ${food.description}"),
-                              Text("Ditambahkan pada tanggal ${food.dateAdded.day}/${food.dateAdded.month}/${food.dateAdded.year} pukul ${food.dateAdded.hour}.${food.dateAdded.minute}")
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('Close'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
+        appBar: AppBar(
+          title: const Text('Food'),
+        ),
+        drawer: const LeftDrawer(),
+        body: FutureBuilder(
+            future: fetchProduct(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                if (!snapshot.hasData) {
+                  return const Column(
+                    children: [
+                      Text(
+                        "Tidak ada data menu.",
+                        style:
+                        TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                      ),
+                      SizedBox(height: 8),
+                    ],
                   );
-                },
-              ),
-            ),
-          );
-        },
-      ),
-    );
+                } else {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (_, index) => Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${snapshot.data![index].fields.name}",
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text("Harga: ${snapshot.data![index].fields.price}"),
+                            const SizedBox(height: 10),
+                            Text("Kategori: ${snapshot.data![index].fields.category}"),
+                            const SizedBox(height: 10),
+                            Text("Asal Daerah: ${snapshot.data![index].fields.origin}"),
+                            const SizedBox(height: 10),
+                            Text("${snapshot.data![index].fields.description}"),
+                            const SizedBox(height: 10),
+                            Text("Jumlah: ${snapshot.data![index].fields.amount}"),
+                          ],
+                        ),
+                      ));
+                }
+              }
+            }));
   }
 }
