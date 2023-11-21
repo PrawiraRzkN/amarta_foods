@@ -642,5 +642,3 @@ Tentu, berikut penjelasan singkat tapi lengkap untuk langkah-langkah integrasi a
 ### Fitur Logout:
 19. Buat view untuk logout di Django dan atur path pada `authentication/urls.py`.
 20. Implementasikan logout di Flutter dengan menghubungi endpoint logout di Django melalui `CookieRequest`.
-
-Langkah-langkah tersebut memperlihatkan integrasi autentikasi antara Django dan Flutter, mulai dari setup Django hingga interaksi pengguna dengan aplikasi Flutter.
